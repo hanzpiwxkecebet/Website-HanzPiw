@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Utama HanzPiw</title>
-    
-    <!-- Google Fonts -->
+    <title>Website HanzPiw</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
-        /* --- CSS VARIABLES & RESET --- */
         :root {
-            --bg-color: #050505;
-            --card-bg: rgba(20, 20, 25, 0.6);
+            --bg-dark: #050505;
+            --glass-bg: rgba(20, 20, 30, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.08);
             --neon-blue: #00f3ff;
             --neon-purple: #bc13fe;
+            --neon-cyan: #0affc2;
             --text-main: #ffffff;
-            --text-dim: #a0a0a0;
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-dim: #a0a0b0;
             --font-heading: 'Orbitron', sans-serif;
             --font-body: 'Rajdhani', sans-serif;
+            --menu-height: 60px;
+            --menu-collapsed: 60px;
+            --menu-expanded: 200px;
         }
 
         * {
@@ -32,10 +30,11 @@
             padding: 0;
             box-sizing: border-box;
             outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-dark);
             color: var(--text-main);
             font-family: var(--font-body);
             overflow-x: hidden;
@@ -43,55 +42,44 @@
             position: relative;
         }
 
-        /* --- ANIMATED BACKGROUND --- */
         .cyber-grid {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
                 linear-gradient(var(--glass-border) 1px, transparent 1px),
                 linear-gradient(90deg, var(--glass-border) 1px, transparent 1px);
-            background-size: 50px 50px;
-            perspective: 500px;
-            transform-style: preserve-3d;
+            background-size: 40px 40px;
             z-index: -2;
-            opacity: 0.3;
+            opacity: 0.2;
+            transform: perspective(500px) rotateX(20deg) scale(1.5);
             animation: gridMove 20s linear infinite;
         }
 
-        .glow-orb {
+        .aurora-glow {
             position: fixed;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(188, 19, 254, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
+            width: 80vw;
+            height: 80vh;
+            background: radial-gradient(circle, rgba(188, 19, 254, 0.15) 0%, rgba(0, 243, 255, 0.05) 50%, transparent 70%);
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             z-index: -1;
-            filter: blur(80px);
-            animation: pulseOrb 8s ease-in-out infinite alternate;
+            filter: blur(60px);
+            animation: pulseGlow 8s ease-in-out infinite alternate;
         }
 
         @keyframes gridMove {
-            0% { transform: translateY(0) rotateX(20deg); }
-            100% { transform: translateY(50px) rotateX(20deg); }
+            0% { background-position: 0 0; }
+            100% { background-position: 0 40px; }
         }
 
-        @keyframes pulseOrb {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        @keyframes pulseGlow {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
         }
 
-        /* --- LOADING SCREEN --- */
         #loader {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: #000;
             z-index: 9999;
             display: flex;
@@ -101,24 +89,22 @@
             transition: opacity 0.8s ease, visibility 0.8s;
         }
 
-        .loader-content {
-            text-align: center;
-        }
-
         .loader-logo {
             font-family: var(--font-heading);
-            font-size: 2rem;
-            color: var(--neon-blue);
-            text-shadow: 0 0 10px var(--neon-blue);
-            margin-bottom: 20px;
-            letter-spacing: 2px;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+            animation: zoomIn 1s ease forwards;
         }
 
-        .loader-bar {
-            width: 200px;
-            height: 4px;
-            background: #111;
-            border-radius: 2px;
+        .loader-bar-container {
+            width: 250px;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
             overflow: hidden;
             position: relative;
         }
@@ -126,567 +112,1148 @@
         .loader-progress {
             width: 0%;
             height: 100%;
-            background: var(--neon-purple);
-            box-shadow: 0 0 10px var(--neon-purple);
-            animation: loadProgress 2s ease-in-out forwards;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            box-shadow: 0 0 15px var(--neon-blue);
+            border-radius: 10px;
+            transition: width 0.1s linear;
         }
 
-        @keyframes loadProgress {
-            0% { width: 0%; }
-            50% { width: 70%; }
-            100% { width: 100%; }
+        .loader-text {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--neon-blue);
+            letter-spacing: 2px;
+            font-family: var(--font-heading);
         }
 
-        /* --- NAVBAR --- */
-        nav {
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        nav.top-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 5%;
-            backdrop-filter: blur(10px);
-            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.4);
             border-bottom: 1px solid var(--glass-border);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        .logo {
+        .brand {
             font-family: var(--font-heading);
-            font-size: 1.5rem;
             font-weight: 900;
-            color: var(--text-main);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
+            font-size: 1.4rem;
+            color: white;
         }
-
-        .logo span {
-            color: var(--neon-blue);
-        }
+        .brand span { color: var(--neon-blue); }
 
         .status-badge {
-            font-size: 0.8rem;
-            padding: 5px 10px;
+            font-size: 0.75rem;
+            padding: 5px 12px;
             border: 1px solid var(--neon-purple);
             color: var(--neon-purple);
-            border-radius: 4px;
-            text-transform: uppercase;
-            box-shadow: 0 0 5px rgba(188, 19, 254, 0.3);
+            border-radius: 20px;
+            background: rgba(188, 19, 254, 0.1);
+            box-shadow: 0 0 10px rgba(188, 19, 254, 0.2);
             animation: blink 2s infinite;
         }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
+        @keyframes blink { 50% { opacity: 0.6; } }
 
-        /* --- MAIN CONTAINER --- */
-        .container {
-            max-width: 800px; /* Slightly narrower for better focus */
-            margin: 40px auto;
-            padding: 0 20px;
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* --- PROFILE IMAGE SECTION (16:9 Aspect Ratio) --- */
-        .profile-section {
-            position: relative;
-            width: 100%;
-            max-width: 500px; /* Max width for the banner */
-            margin-bottom: 30px;
+        .expanding-menu-container {
+            position: sticky;
+            top: 75px;
+            z-index: 99;
+            padding: 15px 5%;
             display: flex;
             justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .menu-pill {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: var(--menu-collapsed);
+            height: var(--menu-height);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 999px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .menu-pill:hover, .menu-pill.active {
+            width: var(--menu-expanded);
+            background: rgba(10, 10, 20, 0.8);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+
+        .pill-icon {
+            width: var(--menu-height);
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+
+        .pill-label {
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.4s ease 0.1s;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            margin-left: 10px;
+        }
+
+        .menu-pill:hover .pill-label, .menu-pill.active .pill-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: rippleAnim 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+
+        .content-wrapper {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            min-height: 60vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-section {
+            display: none;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-profile {
+            text-align: center;
+            margin-bottom: 50px;
         }
 
         .profile-frame {
-            position: relative;
             width: 100%;
-            aspect-ratio: 16 / 9; /* Force 16:9 Ratio */
-            border-radius: 12px;
-            padding: 4px; /* Space for the border */
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.15);
+            max-width: 600px;
+            aspect-ratio: 16/9;
+            margin: 0 auto 30px;
+            position: relative;
+            border-radius: 15px;
+            padding: 3px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
             overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        /* Animated Border Gradient */
-        .profile-frame::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(transparent, var(--neon-blue), transparent, var(--neon-purple));
-            animation: rotateBorder 4s linear infinite;
-            z-index: 1;
-        }
-
-        /* Inner Mask to create border effect */
-        .profile-frame::after {
-            content: '';
-            position: absolute;
-            inset: 4px; /* Matches padding */
-            background: #0a0a0a;
-            border-radius: 8px;
-            z-index: 2;
         }
 
         .profile-img {
-            position: absolute;
-            inset: 4px;
-            width: calc(100% - 8px);
-            height: calc(100% - 8px);
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            border-radius: 8px;
-            z-index: 3;
-            filter: brightness(0.9) contrast(1.1);
-            transition: filter 0.3s ease;
-        }
-
-        .profile-frame:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 35px rgba(188, 19, 254, 0.3);
-        }
-
-        .profile-frame:hover .profile-img {
-            filter: brightness(1.1);
-        }
-
-        @keyframes rotateBorder {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* --- HERO TEXT --- */
-        .hero-text {
-            text-align: center;
-            margin-bottom: 40px;
+            border-radius: 12px;
+            filter: brightness(0.9);
         }
 
         .hero-title {
             font-family: var(--font-heading);
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             margin-bottom: 10px;
-            background: linear-gradient(90deg, #fff, var(--neon-blue));
+            background: linear-gradient(to right, #fff, var(--neon-cyan));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
-            text-transform: uppercase;
         }
 
-        .hero-subtitle {
-            color: var(--text-dim);
-            font-size: 1rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        /* --- BUTTON GRID --- */
-        .grid-menu {
+        .grid-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 25px;
             padding-bottom: 50px;
-            width: 100%;
         }
 
-        /* --- CARD STYLE --- */
-        .card-btn {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
+        .premium-card {
+            background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            padding: 18px 20px;
-            border-radius: 10px;
-            text-decoration: none;
-            color: var(--text-main);
+            border-radius: 16px;
+            padding: 20px;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             backdrop-filter: blur(15px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: white;
         }
 
-        /* Neon Hover Effect */
-        .card-btn::before {
+        .premium-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 10px;
-            padding: 1px;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .premium-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 243, 255, 0.1);
+        }
+
+        .premium-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            padding: 2px;
             background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
-            opacity: 0.5;
-            transition: opacity 0.3s ease;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
+        .premium-card:hover::after { opacity: 1; }
 
-        .card-btn:hover {
-            transform: translateY(-3px);
-            background: rgba(30, 30, 40, 0.9);
-            border-color: rgba(0, 243, 255, 0.5);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
-        }
-
-        .card-btn:hover::before {
-            opacity: 1;
-            background: linear-gradient(90deg, var(--neon-purple), var(--neon-blue));
-        }
-
-        /* Icon Style */
-        .icon-box {
-            width: 45px;
-            height: 45px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
+        .card-header {
             display: flex;
-            justify-content: center;
             align-items: center;
-            font-size: 1.4rem;
-            margin-right: 15px;
-            color: var(--neon-blue);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(0, 243, 255, 0.1);
-            flex-shrink: 0;
+            margin-bottom: 15px;
+            z-index: 1;
         }
 
-        .card-btn:hover .icon-box {
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+            margin-right: 15px;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .premium-card:hover .card-icon {
             background: var(--neon-blue);
             color: #000;
             box-shadow: 0 0 15px var(--neon-blue);
-            transform: scale(1.1);
+            transform: rotate(10deg);
         }
 
-        /* Text Content */
-        .card-content {
-            flex: 1;
-        }
-
-        .card-title {
+        .card-info h3 {
             font-family: var(--font-heading);
-            font-size: 0.95rem;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .card-info p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.4;
+        }
+
+        .card-action {
+            margin-top: auto;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-download {
+            background: linear-gradient(90deg, var(--neon-purple), #8a00d4);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-weight: 700;
-            margin-bottom: 4px;
-            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(188, 19, 254, 0.3);
+            text-decoration: none;
+            display: inline-block;
         }
 
-        .card-desc {
-            font-size: 0.75rem;
+        .btn-download:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--neon-purple);
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(90deg, #25D366, #128C7E);
+        }
+        
+        .btn-telegram {
+            background: linear-gradient(90deg, #0088cc, #005f8f);
+        }
+
+        .rating {
+            color: #ffd700;
+            font-size: 0.8rem;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .social-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+        .social-card:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-5px);
+            border-color: var(--neon-cyan);
+        }
+
+        .social-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
             color: var(--text-dim);
+            transition: 0.3s;
         }
 
-        /* Arrow Icon */
-        .arrow-icon {
-            color: var(--text-dim);
-            transition: transform 0.3s ease, color 0.3s ease;
-            font-size: 0.9rem;
+        .social-card:hover .social-icon {
+            color: var(--neon-cyan);
+            transform: scale(1.2);
         }
 
-        .card-btn:hover .arrow-icon {
-            transform: translateX(4px);
-            color: var(--neon-purple);
-        }
-
-        /* Purple Accent Variant */
-        .card-btn.purple-accent:hover {
-            border-color: rgba(188, 19, 254, 0.5);
-            box-shadow: 0 0 20px rgba(188, 19, 254, 0.15);
-        }
-        .card-btn.purple-accent:hover .icon-box {
-            background: var(--neon-purple);
-            box-shadow: 0 0 15px var(--neon-purple);
-        }
-
-        /* --- FOOTER --- */
         footer {
             text-align: center;
-            padding: 30px;
+            padding: 40px 20px;
             border-top: 1px solid var(--glass-border);
-            background: rgba(0, 0, 0, 0.8);
-            font-size: 0.9rem;
+            background: rgba(0,0,0,0.8);
+            margin-top: 50px;
             color: var(--text-dim);
-            margin-top: auto;
-            width: 100%;
+            font-size: 0.9rem;
         }
 
-        footer span {
+        .about-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .about-full {
+            grid-column: 1 / -1;
+        }
+
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .badge {
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--neon-blue);
             color: var(--neon-blue);
-            font-family: var(--font-heading);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
 
-        /* --- RESPONSIVE --- */
+        .skill-item {
+            margin-bottom: 20px;
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 4px;
+            width: 0;
+            transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .list-group {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .list-group li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            color: var(--text-dim);
+        }
+
+        .list-group li i {
+            margin-right: 10px;
+            color: var(--neon-cyan);
+        }
+
+        .fact-card {
+            background: rgba(255,255,255,0.02);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid var(--neon-purple);
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+        .fact-card:hover {
+            background: rgba(255,255,255,0.05);
+            transform: translateX(5px);
+        }
+
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: 1.6rem;
+            .expanding-menu-container {
+                justify-content: space-between;
+                overflow-x: auto;
+                padding-bottom: 20px;
+                flex-wrap: nowrap;
             }
-            .grid-menu {
-                grid-template-columns: 1fr;
-                gap: 15px;
+            .menu-pill {
+                width: 50px;
+                height: 50px;
+                flex-shrink: 0;
             }
-            .card-btn {
-                padding: 15px;
+            .menu-pill:hover, .menu-pill.active {
+                width: 160px;
             }
-            .profile-frame {
-                max-width: 100%;
-            }
+            .hero-title { font-size: 1.8rem; }
+            .about-layout { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Loading Screen -->
     <div id="loader">
-        <div class="loader-content">
-            <div class="loader-logo">Website HanzPiw</div>
-            <div class="loader-bar">
-                <div class="loader-progress"></div>
-            </div>
-            <p style="margin-top: 10px; font-size: 0.8rem; color: #666;">INITIALIZING SECURE CONNECTION...</p>
+        <div class="loader-logo">Website HanzPiw</div>
+        <div class="loader-bar-container">
+            <div class="loader-progress" id="progressBar"></div>
         </div>
+        <div class="loader-text"><span id="percentText">0</span>% LOADING</div>
     </div>
 
-    <!-- Background Elements -->
     <div class="cyber-grid"></div>
-    <div class="glow-orb"></div>
+    <div class="aurora-glow"></div>
 
-    <!-- Navbar -->
-    <nav>
-        <div class="logo">Hanz<span>Piw</span></div>
-        <div class="status-badge"><i class="fas fa-circle" style="font-size: 8px; margin-right: 5px;"></i> Online</div>
+    <nav class="top-nav">
+        <div class="brand">Hanz<span>Piw</span></div>
+        <div class="status-badge"><i class="fas fa-circle" style="font-size:8px; margin-right:5px;"></i> ONLINE</div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        
-        <!-- Profile Image Section (16:9 Aspect Ratio) -->
-        <div class="profile-section">
-            <div class="profile-frame">
-                <img src="https://www.upload.ee/image/19429658/file.jpg" alt="HanzPiw Profile Banner" class="profile-img">
-            </div>
+    <div class="expanding-menu-container">
+        <div class="menu-pill active" onclick="switchTab('home')">
+            <div class="pill-icon"><i class="fas fa-home"></i></div>
+            <div class="pill-label">Home</div>
         </div>
-
-        <div class="hero-text">
-            <h1 class="hero-title">Website Utama HanzPiw</h1>
-            <p class="hero-subtitle">Access the future of digital tools</p>
+        <div class="menu-pill" onclick="switchTab('about')">
+            <div class="pill-icon"><i class="fas fa-user-astronaut"></i></div>
+            <div class="pill-label">About</div>
         </div>
-
-        <div class="grid-menu">
-            
-            <!-- 1. Price APK Premium -->
-            <a href="https://hanzpiwxkecebet.github.io/App-Premium-By-HanzPiw/" target="_blank" class="card-btn">
-                <div class="icon-box">
-                    <i class="fas fa-mobile-alt"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Price APK Premium</div>
-                    <div class="card-desc">Get latest premium applications</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- 2. Channel WhatsApp -->
-            <a href="https://whatsapp.com/channel/0029VbCv5vq6WaKeBDGgOM3N" target="_blank" class="card-btn purple-accent">
-                <div class="icon-box">
-                    <i class="fab fa-whatsapp"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Channel WhatsApp</div>
-                    <div class="card-desc">Join our official community</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- 3. Channel Telegram -->
-            <a href="https://t.me/abouthanzpiw1" target="_blank" class="card-btn">
-                <div class="icon-box">
-                    <i class="fab fa-telegram-plane"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Channel Telegram</div>
-                    <div class="card-desc">Updates & Announcements</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- 4. Channel Telegram 2 -->
-            <a href="https://t.me/About_Voltra_Nexus" target="_blank" class="card-btn">
-                <div class="icon-box">
-                    <i class="fab fa-telegram"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Channel Voltra Nexus</div>
-                    <div class="card-desc">Updates & Announcements Voltra Nexus</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- 5. Murbug / Panel Free -->
-            <a href="https://t.me/murbugfreebyhanzpiw" target="_blank" class="card-btn purple-accent">
-                <div class="icon-box">
-                    <i class="fas fa-bug"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Murbug / Panel Free</div>
-                    <div class="card-desc">Free tools & panels access</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- 6. Price SC Voltra Nexus -->
-            <a href="https://hanzpiwxkecebet.github.io/Price-Sc-Voltra-Nexus-By-HanzPiw/" target="_blank" class="card-btn">
-                <div class="icon-box">
-                    <i class="fas fa-bolt"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Price SC Voltra Nexus</div>
-                    <div class="card-desc">High performance source code</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- 7. Price Nokos -->
-            <a href="https://hanzpiwxkecebet.github.io/Price-Nokos-By-HanzPiw/" target="_blank" class="card-btn">
-                <div class="icon-box">
-                    <i class="fas fa-sim-card"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Price Nokos</div>
-                    <div class="card-desc">Virtual numbers for verification</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- 8. Jasa Suntik Sosmed -->
-            <a href="https://hanzpiwxkecebet.github.io/Jasa-Suntik-Sosmed/" target="_blank" class="card-btn purple-accent">
-                <div class="icon-box">
-                    <i class="fas fa-rocket"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Jasa Suntik Sosmed</div>
-                    <div class="card-desc">Boost your social media presence</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-            
-            <!-- 9. Sosmed -->
-            <a href="https://hanzpiwxkecebet.github.io/Sosmed-HanzPiw/" target="_blank" class="card-btn purple-accent">
-                <div class="icon-box">
-                    <i class="fas fa-rocket"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Sosmed HanzPiw</div>
-                    <div class="card-desc">My social Media</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- 10. Donasi HanzPiw -->
-            <a href="https://hanzpiwxkecebet.github.io/Web-Donasi-HanzPiw/" target="_blank" class="card-btn">
-                <div class="icon-box">
-                    <i class="fas fa-heart"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Donasi HanzPiw</div>
-                    <div class="card-desc">Support our development</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- 11. Belajar Coding -->
-            <a href="https://hanzpiwxkecebet.github.io/Pengertian-Coding/" target="_blank" class="card-btn">
-                <div class="icon-box">
-                    <i class="fas fa-code"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">Belajar Coding</div>
-                    <div class="card-desc">Master programming skills</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- 12. IQC -->
-            <a href="https://hanzpiwxkecebet.github.io/Iqc-IPhone-by-HanzPiw/" target="_blank" class="card-btn purple-accent">
-                <div class="icon-box">
-                    <i class="fas fa-brain"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">IQC</div>
-                    <div class="card-desc">Intelligence Quality Control</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
-            <!-- 13. iPhone About Me -->
-            <a href="https://hanzpiwxkecebet.github.io/About-HanzPiw/" target="_blank" class="card-btn">
-                <div class="icon-box">
-                    <i class="fab fa-apple"></i>
-                </div>
-                <div class="card-content">
-                    <div class="card-title">About Me</div>
-                    <div class="card-desc">Discover more about HanzPiw</div>
-                </div>
-                <i class="fas fa-chevron-right arrow-icon"></i>
-            </a>
-
+        <div class="menu-pill" onclick="switchTab('products')">
+            <div class="pill-icon"><i class="fas fa-shopping-cart"></i></div>
+            <div class="pill-label">Produk</div>
+        </div>
+        <div class="menu-pill" onclick="switchTab('games')">
+            <div class="pill-icon"><i class="fas fa-gamepad"></i></div>
+            <div class="pill-label">Games</div>
+        </div>
+        <div class="menu-pill" onclick="switchTab('social')">
+            <div class="pill-icon"><i class="fas fa-share-alt"></i></div>
+            <div class="pill-label">Social</div>
+        </div>
+        <div class="menu-pill" onclick="switchTab('others')">
+            <div class="pill-icon"><i class="fas fa-box-open"></i></div>
+            <div class="pill-label">Lainnya</div>
+        </div>
+        <div class="menu-pill" onclick="switchTab('contact')">
+            <div class="pill-icon"><i class="fas fa-envelope"></i></div>
+            <div class="pill-label">Contact</div>
         </div>
     </div>
 
-    <!-- Footer -->
+    <div class="content-wrapper">
+
+        <section id="home" class="page-section active">
+            <div class="hero-profile">
+                <div class="profile-frame">
+                    <img src="https://www.upload.ee/image/19429658/file.jpg" alt="HanzPiw Banner" class="profile-img">
+                </div>
+                <h1 class="hero-title">Website HanzPiw</h1>
+                <p style="color: var(--neon-cyan); letter-spacing: 2px; text-transform: uppercase;">Premium Digital Solutions</p>
+            </div>
+
+            <div class="grid-container">
+                <a href="https://hanzpiwxkecebet.github.io/App-Premium-By-HanzPiw/" target="_blank" class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <div class="card-info">
+                            <h3>Price APK Premium</h3>
+                            <p>Aplikasi premium terbaru.</p>
+                        </div>
+                    </div>
+                    <div class="card-action"><span class="btn-download">Beli</span></div>
+                </a>
+
+                <a href="https://whatsapp.com/channel/0029VbAbAnH6hENiZ1MA6z3O" target="_blank" class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="color: #25D366;"><i class="fab fa-whatsapp"></i></div>
+                        <div class="card-info">
+                            <h3>Channel WhatsApp</h3>
+                            <p>Bergabung dengan komunitas resmi.</p>
+                        </div>
+                    </div>
+                    <div class="card-action"><span class="btn-download btn-whatsapp">Join</span></div>
+                </a>
+
+                <a href="https://t.me/abouthanzpiww" target="_blank" class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="color: #0088cc;"><i class="fab fa-telegram-plane"></i></div>
+                        <div class="card-info">
+                            <h3>Channel Telegram</h3>
+                            <p>Update & pengumuman terbaru.</p>
+                        </div>
+                    </div>
+                    <div class="card-action"><span class="btn-download btn-telegram">Join</span></div>
+                </a>
+                
+                <a href="https://hanzpiwxkecebet.github.io/Web-Donasi-HanzPiw/" target="_blank" class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon" style="color: #ff4757;"><i class="fas fa-heart"></i></div>
+                        <div class="card-info">
+                            <h3>Donasi HanzPiw</h3>
+                            <p>Dukung pengembangan website.</p>
+                        </div>
+                    </div>
+                    <div class="card-action"><span class="btn-download" style="background:#ff4757">Donasi</span></div>
+                </a>
+            </div>
+        </section>
+
+        <section id="about" class="page-section">
+            <h2 class="hero-title" style="text-align:center; margin-bottom:30px;">Tentang Saya</h2>
+            
+            <div class="about-layout">
+                <div class="premium-card about-full">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-user"></i></div>
+                        <div class="card-info">
+                            <h3>HanzPiw</h3>
+                            <p>Pelajar Kelas 10 | Web & Bot Developer</p>
+                        </div>
+                    </div>
+                    <p style="color:var(--text-dim); line-height:1.6; margin-bottom:15px;">
+                        Saya adalah seorang pelajar yang memiliki passion tinggi di dunia teknologi. Fokus utama saya adalah pengembangan web modern dan otomasi bot. Saya percaya bahwa teknologi harus memudahkan kehidupan, dan saya terus belajar setiap hari untuk menciptakan solusi digital yang efisien, aman, dan estetis.
+                    </p>
+                    <div class="badge-container">
+                        <span class="badge">Disiplin</span>
+                        <span class="badge">Kreatif</span>
+                        <span class="badge">Konsisten</span>
+                        <span class="badge">Adaptif</span>
+                        <span class="badge">Rasa Ingin Tahu Tinggi</span>
+                        <span class="badge">Pantang Menyerah</span>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-code"></i></div>
+                        <div class="card-info"><h3>Keahlian Teknis</h3></div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header"><span>HTML, CSS & JavaScript</span><span>90%</span></div>
+                        <div class="progress-track"><div class="progress-fill" data-width="90%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span>Node.js Development</span><span>85%</span></div>
+                        <div class="progress-track"><div class="progress-fill" data-width="85%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span>Bot Development</span><span>95%</span></div>
+                        <div class="progress-track"><div class="progress-fill" data-width="95%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span>UI/UX Design</span><span>80%</span></div>
+                        <div class="progress-track"><div class="progress-fill" data-width="80%"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span>Problem Solving</span><span>90%</span></div>
+                        <div class="progress-track"><div class="progress-fill" data-width="90%"></div></div>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-rocket"></i></div>
+                        <div class="card-info"><h3>Goals & Dreams</h3></div>
+                    </div>
+                    <p style="color:var(--text-dim); line-height:1.6;">
+                        Menjadi developer profesional yang mampu menciptakan ekosistem digital yang bermanfaat bagi banyak orang. Saya ingin terus memperdalam keahlian di bidang Full-Stack Development dan AI Integration.
+                    </p>
+                    <div style="margin-top:20px;">
+                        <h4 style="color:var(--neon-blue); margin-bottom:10px;">Aktivitas:</h4>
+                        <ul class="list-group">
+                            <li><i class="fas fa-check"></i> Belajar coding secara mandiri</li>
+                            <li><i class="fas fa-check"></i> Mengembangkan project bot</li>
+                            <li><i class="fas fa-check"></i> Membuat website modern</li>
+                            <li><i class="fas fa-check"></i> Eksplorasi framework baru</li>
+                        </ul>
+                        <h4 style="color:var(--neon-purple); margin:15px 0 10px;">Hobi:</h4>
+                        <div class="badge-container">
+                            <span class="badge" style="border-color:var(--neon-purple); color:var(--neon-purple);">Coding</span>
+                            <span class="badge" style="border-color:var(--neon-purple); color:var(--neon-purple);">Desain Grafis</span>
+                            <span class="badge" style="border-color:var(--neon-purple); color:var(--neon-purple);">Editing</span>
+                            <span class="badge" style="border-color:var(--neon-purple); color:var(--neon-purple);">Gaming</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="premium-card about-full">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+                        <div class="card-info"><h3>Fakta Menarik</h3></div>
+                    </div>
+                    <div class="grid-container" style="padding-bottom:0; gap:15px;">
+                        <div class="fact-card">
+                            <i class="fas fa-moon" style="color:var(--neon-blue); margin-right:10px;"></i>
+                            Lebih suka coding pada malam hari karena suasana lebih tenang.
+                        </div>
+                        <div class="fact-card">
+                            <i class="fas fa-laptop-code" style="color:var(--neon-cyan); margin-right:10px;"></i>
+                            Sedang fokus memperdalam JavaScript, Node.js, dan Front-End Development.
+                        </div>
+                        <div class="fact-card">
+                            <i class="fas fa-paint-brush" style="color:var(--neon-purple); margin-right:10px;"></i>
+                            Suka membuat website modern dengan animasi premium.
+                        </div>
+                        <div class="fact-card">
+                            <i class="fas fa-bolt" style="color:#ffd700; margin-right:10px;"></i>
+                            Selalu mencoba teknologi baru untuk meningkatkan kualitas project.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="products" class="page-section">
+            <h2 class="hero-title" style="text-align:center; margin-bottom:30px;">Produk & Layanan</h2>
+            
+            <h3 style="color:var(--neon-blue); margin: 20px 0; font-family:var(--font-heading);">APK PREMIUM</h3>
+            <div class="grid-container">
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+                            </svg>
+                        </div>
+                        <div class="card-info">
+                            <h3>Alight Motion Premium</h3>
+                            <p>ACC B: Rp6.000 (1 Tahun)<br>Gene: Rp5.000 (1 Tahun)</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://wa.me/6285191782145" class="btn-download btn-whatsapp">WA Admin</a>
+                        <a href="https://t.me/hanzpiwofc" class="btn-download btn-telegram">TG Admin</a>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-layer-group"></i></div>
+                        <div class="card-info">
+                            <h3>Bulk Alight Motion</h3>
+                            <p>50 Akun: Rp8.000<br>100 Akun: Rp13.000<br>200 Akun: Rp19.000<br>500 Akun: Rp30.000</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://wa.me/6285191782145" class="btn-download btn-whatsapp">WA Admin</a>
+                        <a href="https://t.me/hanzpiwofc" class="btn-download btn-telegram">TG Admin</a>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <path d="M3,3V21H21V3H3M5,5H19V19H5V5Z" />
+                            </svg>
+                        </div>
+                        <div class="card-info">
+                            <h3>Canva Pro</h3>
+                            <p>Member: Rp4.000/bln<br>Head: Rp10.000/bln</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://wa.me/6285191782145" class="btn-download btn-whatsapp">WA Admin</a>
+                        <a href="https://t.me/hanzpiwofc" class="btn-download btn-telegram">TG Admin</a>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M8,12L10,14L16,8" stroke="white" stroke-width="2" fill="none" />
+                            </svg>
+                        </div>
+                        <div class="card-info">
+                            <h3>PicsArt Gold</h3>
+                            <p>ACC B: Rp6.000<br>ACC S: Rp5.000</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://wa.me/6285191782145" class="btn-download btn-whatsapp">WA Admin</a>
+                        <a href="https://t.me/hanzpiwofc" class="btn-download btn-telegram">TG Admin</a>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fab fa-spotify"></i></div>
+                        <div class="card-info">
+                            <h3>Spotify Premium</h3>
+                            <p>3 Bulan: Rp18.000</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://wa.me/6285191782145" class="btn-download btn-whatsapp">WA Admin</a>
+                        <a href="https://t.me/hanzpiwofc" class="btn-download btn-telegram">TG Admin</a>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2Z" />
+                                <circle cx="8" cy="10" r="1.5" fill="white" />
+                                <circle cx="16" cy="10" r="1.5" fill="white" />
+                                <path d="M8,16Q12,20 16,16" stroke="white" stroke-width="2" fill="none" />
+                            </svg>
+                        </div>
+                        <div class="card-info">
+                            <h3>Wink Premium</h3>
+                            <p>ACC B: Rp6.000<br>ACC S: Rp5.000</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://wa.me/6285191782145" class="btn-download btn-whatsapp">WA Admin</a>
+                        <a href="https://t.me/hanzpiwofc" class="btn-download btn-telegram">TG Admin</a>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fab fa-youtube"></i></div>
+                        <div class="card-info">
+                            <h3>YouTube Premium</h3>
+                            <p>Famplan: Rp6.000<br>Indplan: Rp10.000<br>Head: Rp12.000<br>Jaspay ACC B: Rp5.000</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://wa.me/6285191782145" class="btn-download btn-whatsapp">WA Admin</a>
+                        <a href="https://t.me/hanzpiwofc" class="btn-download btn-telegram">TG Admin</a>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-robot"></i></div>
+                        <div class="card-info">
+                            <h3>List Harga Sewa Bot</h3>
+                            <p>️🗓 1 Minggu: Rp8.000<br>🗓️ 2 Minggu: Rp15.000<br>🗓️ 3 Minggu: Rp22.000<br>🗓️ 1 Bulan: Rp30.000<br>🗓️ 2 Bulan: Rp55.000<br>🗓️ 3 Bulan: Rp80.000<br>🗓️ 4 Bulan: Rp105.000<br>🗓️ 5 Bulan: Rp130.000<br>🗓️ 6 Bulan: Rp150.000<br>🗓️ 7 Bulan: Rp170.000<br>🗓️ 8 Bulan: Rp190.000<br>🗓️ 9 Bulan: Rp205.000<br>🗓️ 10 Bulan: Rp220.000<br>🗓️ 11 Bulan: Rp235.000<br>️🗓 12 Bulan: Rp250.000<br>♾️ Permanen: Rp250.000</p>
+                        </div>
+                    </div>
+                    <div class="card-info" style="margin-top: 10px;">
+                        <p style="color: var(--neon-cyan); font-weight: bold; margin-bottom: 5px;">💬 Keuntungan Sewa Bot:</p>
+                        <ul class="list-group">
+                            <li><i class="fas fa-check"></i> Bot aktif 24 jam</li>
+                            <li><i class="fas fa-check"></i> Bisa masuk ke grup</li>
+                            <li><i class="fas fa-check"></i> Mendapat update fitur</li>
+                            <li><i class="fas fa-check"></i> Support selama masa sewa</li>
+                        </ul>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://wa.me/6285191782145?text=Halo%20Admin%20HanzPiw,%20saya%20mau%20sewa%20bot" class="btn-download btn-whatsapp">WA Admin</a>
+                        <a href="https://t.me/hanzpiwofc" class="btn-download btn-telegram">TG Admin</a>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="color:var(--neon-purple); margin: 40px 0 20px; font-family:var(--font-heading);">PRICE VOLTRA NEXUS</h3>
+            <div class="grid-container">
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-crown"></i></div>
+                        <div class="card-info">
+                            <h3>Script Voltra Nexus</h3>
+                            <p>Full Up: Rp15.000<br>Reseller: Rp25.000<br>Partner: Rp35.000<br>Moderator: Rp45.000<br>CEO: Rp55.000<br>Owner: Rp65.000<br>Tangan Kanan: Rp75.000<br>Supreme: Rp90.000<br>Creator: Rp110.000</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://hanzpiwxkecebet.github.io/Price-Sc-Voltra-Nexus-By-HanzPiw/" target="_blank" class="btn-download">Lihat Harga Lengkap</a>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="color:var(--neon-cyan); margin: 40px 0 20px; font-family:var(--font-heading);">JASA SUNTIK SOSMED</h3>
+            <div class="grid-container">
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fab fa-instagram"></i></div>
+                        <div class="card-info">
+                            <h3>Instagram</h3>
+                            <p>Followers (50-5M): Rp1.000 - Rp20.000.000<br>Likes (50-100k): Rp500 - Rp100.000</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fab fa-tiktok"></i></div>
+                        <div class="card-info">
+                            <h3>TikTok</h3>
+                            <p>Followers (10-1M): Rp500 - Rp30.000.000<br>Likes (10-1M): Rp200 - Rp800.000</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fab fa-whatsapp"></i></div>
+                        <div class="card-info">
+                            <h3>Channel WhatsApp</h3>
+                            <p>Followers (10-100k): Rp700 - Rp700.000<br>React Pesan (10-10k): Rp500 - Rp2.000.000</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="premium-card" style="grid-column: 1 / -1;">
+                    <div class="card-info">
+                        <p style="text-align:center; color:var(--neon-blue);">Masih banyak layanan suntik sosial media lainnya. Silakan hubungi Owner untuk mendapatkan daftar harga lengkap.</p>
+                    </div>
+                    <div class="card-action" style="justify-content:center;">
+                        <a href="https://wa.me/6285191782145" class="btn-download btn-whatsapp">WA Admin</a>
+                        <a href="https://t.me/hanzpiwofc" class="btn-download btn-telegram">TG Admin</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="games" class="page-section">
+            <h2 class="hero-title" style="text-align:center; margin-bottom:30px;">Game Penghasil Uang</h2>
+            <div class="grid-container">
+                
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-dog"></i></div>
+                        <div class="card-info">
+                            <h3>Puzzle Dog</h3>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
+                            <p>Game santai dengan gameplay sederhana.</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <button class="btn-download" onclick="window.open('https://pd.shareearn3.com/?code=20244432', '_blank')">Download</button>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-hand-paper"></i></div>
+                        <div class="card-info">
+                            <h3>No Fight</h3>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
+                            <p>Permainan ringan dengan tampilan modern.</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <button class="btn-download" onclick="window.open('https://dwt9d15wn7jh4.cloudfront.net/nf/index_1.html?s=NzY4MjAyODk&id=75581983', '_blank')">Download</button>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-bomb"></i></div>
+                        <div class="card-info">
+                            <h3>Clear Blast</h3>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
+                            <p>Game puzzle penuh warna dan menghibur.</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <button class="btn-download" onclick="window.open('https://d2mqz0rf0z4kt3.cloudfront.net/cb/index_1.html?s=NzY2MDUzNjI&id=75367056', '_blank')">Download</button>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-female"></i></div>
+                        <div class="card-info">
+                            <h3>Cool Lady</h3>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
+                            <p>Permainan kasual dengan kontrol mudah.</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <button class="btn-download" onclick="window.open('https://d1bhlj8j9y1glv.cloudfront.net/ld/index_1.html?id=79782892', '_blank')">Download</button>
+                    </div>
+                </div>
+
+                <div class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-user-ninja"></i></div>
+                        <div class="card-info">
+                            <h3>Biu Man</h3>
+                            <div class="rating">⭐⭐⭐⭐⭐</div>
+                            <p>Game hiburan ringan gratis.</p>
+                        </div>
+                    </div>
+                    <div class="card-action">
+                        <button class="btn-download" onclick="window.open('https://dxnbo3oecijhj.cloudfront.net/bbm/index_1.html?s=NTczMTg3MTg&id=56080412', '_blank')">Download</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="social" class="page-section">
+            <h2 class="hero-title" style="text-align:center; margin-bottom:30px;">Ikuti Kami</h2>
+            <div class="social-grid">
+                <a href="https://t.me/abouthanzpiww" target="_blank" class="social-card">
+                    <i class="fab fa-telegram social-icon"></i>
+                    <h3>Telegram</h3>
+                    <p>Channel Update</p>
+                </a>
+                <a href="https://whatsapp.com/channel/0029VbAbAnH6hENiZ1MA6z3O" target="_blank" class="social-card">
+                    <i class="fab fa-whatsapp social-icon" style="color:#25D366"></i>
+                    <h3>WhatsApp</h3>
+                    <p>Komunitas WA</p>
+                </a>
+                <a href="https://tiktok.com/@hanzpiw29" class="social-card">
+                    <i class="fab fa-tiktok social-icon"></i>
+                    <h3>TikTok</h3>
+                    <p>Video Shorts</p>
+                </a>
+                <a href="https://youtube.com/@hanzzetsu" class="social-card">
+                    <i class="fab fa-youtube social-icon" style="color:#ff0000"></i>
+                    <h3>YouTube</h3>
+                    <p>Tutorial & Review</p>
+                </a>
+                <a href="https://www.instagram.com/hanz_store93" class="social-card">
+                    <i class="fab fa-instagram social-icon" style="color:#E1306C"></i>
+                    <h3>Instagram</h3>
+                    <p>Foto & Story</p>
+                </a>
+                <a href="https://github.com/hanzpiwxkecebet" target="_blank" class="social-card">
+                    <i class="fab fa-github social-icon"></i>
+                    <h3>GitHub</h3>
+                    <p>Repository Code</p>
+                </a>
+            </div>
+        </section>
+
+        <section id="others" class="page-section">
+            <h2 class="hero-title" style="text-align:center; margin-bottom:30px;">Lainnya</h2>
+            <div class="grid-container">
+                <a href="https://t.me/murbugfreebyhanzpiw" target="_blank" class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-bug"></i></div>
+                        <div class="card-info">
+                            <h3>Murbug / Panel Free</h3>
+                            <p>Free bug & panel free</p>
+                        </div>
+                    </div>
+                    <div class="card-action"><span class="btn-download">Akses</span></div>
+                </a>
+
+                <a href="https://hanzpiwxkecebet.github.io/Pengertian-Coding/" target="_blank" class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-code"></i></div>
+                        <div class="card-info">
+                            <h3>Belajar Coding</h3>
+                            <p>Master programming skills</p>
+                        </div>
+                    </div>
+                    <div class="card-action"><span class="btn-download">Mulai</span></div>
+                </a>
+
+                <a href="https://hanzpiwxkecebet.github.io/Iqc-IPhone-by-HanzPiw/" target="_blank" class="premium-card">
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fas fa-brain"></i></div>
+                        <div class="card-info">
+                            <h3>IQC</h3>
+                            <p>iPhone QC</p>
+                        </div>
+                    </div>
+                    <div class="card-action"><span class="btn-download">Akses</span></div>
+                </a>
+            </div>
+        </section>
+
+        <section id="contact" class="page-section">
+            <h2 class="hero-title" style="text-align:center; margin-bottom:30px;">Hubungi Kami</h2>
+            <div class="premium-card" style="max-width:600px; margin:0 auto;">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-headset"></i></div>
+                    <div class="card-info">
+                        <h3>Customer Service</h3>
+                        <p>Siap membantu 24/7 via Telegram & WhatsApp.</p>
+                    </div>
+                </div>
+                <div class="card-action" style="justify-content:center; gap:15px;">
+                    <a href="https://wa.me/6285191782145" target="_blank" class="btn-download btn-whatsapp">Chat WhatsApp</a>
+                    <a href="https://t.me/hanzpiwofc" target="_blank" class="btn-download btn-telegram">Chat Telegram</a>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
     <footer>
-        <p>&copy; 2026 <span>HanzPiw</span> Official. All Rights Reserved.</p>
-        <p style="font-size: 0.7rem; margin-top: 5px; opacity: 0.5;">Designed for the Future</p>
+        <p>&copy; 2026 <span style="color:var(--neon-blue); font-family:var(--font-heading);">HanzPiw</span>. All Rights Reserved.</p>
+        <p style="font-size:0.7rem; margin-top:5px; opacity:0.5;">Made by HanzPiw</p>
     </footer>
 
-    <!-- JavaScript -->
     <script>
-        // Loading Screen Logic
         window.addEventListener('load', () => {
             const loader = document.getElementById('loader');
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                loader.style.visibility = 'hidden';
-                
-                // Staggered entrance animation for cards
-                const cards = document.querySelectorAll('.card-btn');
-                cards.forEach((card, index) => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
+            const progressBar = document.getElementById('progressBar');
+            const percentText = document.getElementById('percentText');
+            let width = 0;
+
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
                     setTimeout(() => {
-                        card.style.transition = 'all 0.5s ease';
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, index * 80);
-                });
-            }, 2000);
+                        loader.style.opacity = '0';
+                        loader.style.visibility = 'hidden';
+                    }, 500);
+                } else {
+                    width++;
+                    progressBar.style.width = width + '%';
+                    percentText.innerText = width;
+                }
+            }, 20);
         });
 
-        // 3D Tilt Effect for Desktop
-        const cards = document.querySelectorAll('.card-btn');
-        if (window.innerWidth > 768) {
-            cards.forEach(card => {
-                card.addEventListener('mousemove', (e) => {
-                    const rect = card.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const xRotation = -((y - rect.height/2) / 20);
-                    const yRotation = (x - rect.width/2) / 20;
-                    card.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg) scale(1.02)`;
-                });
+        function switchTab(tabId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.menu-pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+            const targetSection = document.getElementById(tabId);
+            if(targetSection) {
+                targetSection.classList.add('active');
+                if(tabId === 'about') {
+                    animateSkills();
+                }
+            }
+        }
 
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
-                });
+        document.querySelectorAll('.menu-pill').forEach((pill) => {
+            pill.addEventListener('click', function(event) {
+                document.querySelectorAll('.menu-pill').forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                createRipple(event, this);
+            });
+        });
+
+        function createRipple(event, element) {
+            const circle = document.createElement("span");
+            const diameter = Math.max(element.clientWidth, element.clientHeight);
+            const radius = diameter / 2;
+            const rect = element.getBoundingClientRect();
+            
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - rect.left - radius}px`;
+            circle.style.top = `${event.clientY - rect.top - radius}px`;
+            circle.classList.add("ripple");
+
+            const existingRipple = element.getElementsByClassName("ripple")[0];
+            if (existingRipple) {
+                existingRipple.remove();
+            }
+
+            element.appendChild(circle);
+        }
+
+        function animateSkills() {
+            const skills = document.querySelectorAll('.progress-fill');
+            skills.forEach(skill => {
+                const width = skill.getAttribute('data-width');
+                skill.style.width = '0';
+                setTimeout(() => {
+                    skill.style.width = width;
+                }, 100);
             });
         }
     </script>
